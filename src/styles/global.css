@@ -1,0 +1,271 @@
+/* Reset and base */
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+      Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    background:
+      linear-gradient(
+        rgba(15, 23, 42, 0.75),
+        rgba(15, 23, 42, 0.75)
+      ),
+      url('https://d31bgfoj87qaaj.cloudfront.net/blog/wp-content/uploads/2017/10/Blog-11-reasonsfeature-min.jpg')
+      no-repeat center center fixed;
+    background-size: cover;
+    color: #e2e8f0;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+  }
+  
+  /* Container */
+  .app-container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 2rem 3rem;
+    background: rgba(30, 41, 59, 0.85);
+    border-radius: 16px;
+    box-shadow:
+      0 8px 24px rgba(0, 0, 0, 0.6),
+      0 0 12px rgba(96, 165, 250, 0.3);
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .app-container:hover {
+    box-shadow:
+      0 12px 36px rgba(0, 0, 0, 0.75),
+      0 0 24px rgba(96, 165, 250, 0.6);
+  }
+  
+  /* Title */
+  .app-title {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #60a5fa;
+    margin-bottom: 2.5rem;
+    user-select: none;
+    text-shadow: 0 2px 8px rgba(96, 165, 250, 0.7);
+    animation: slideDownFade 0.8s ease forwards;
+  }
+  
+  /* Animations */
+  @keyframes slideDownFade {
+    0% {
+      opacity: 0;
+      transform: translateY(-40px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Input Section */
+  .input-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    margin-bottom: 3rem;
+  }
+  
+  /* Inputs */
+  .input-section input[type="text"],
+  .input-section input[type="number"] {
+    padding: 16px 20px;
+    border-radius: 18px;
+    border: none;
+    font-size: 1rem;
+    min-width: 200px;
+    background-color: #1e293b;
+    color: #e2e8f0;
+    box-shadow:
+      inset 0 0 10px #334155,
+      0 0 0 0 transparent;
+    transition: box-shadow 0.35s ease, transform 0.3s ease;
+    outline-offset: 3px;
+    font-weight: 500;
+    cursor: text;
+    user-select: text;
+  }
+  
+  .input-section input[type="text"]::placeholder,
+  .input-section input[type="number"]::placeholder {
+    color: #94a3b8;
+  }
+  
+  .input-section input[type="text"]:focus,
+  .input-section input[type="number"]:focus {
+    box-shadow:
+      inset 0 0 12px #60a5fa,
+      0 0 10px 4px #60a5fa;
+    outline: none;
+    background-color: #1e40af;
+    transform: scale(1.05);
+  }
+  
+  /* Selects */
+  .input-section select {
+    padding: 16px 20px;
+    border-radius: 18px;
+    border: none;
+    font-size: 1rem;
+    min-width: 160px;
+    background-color: #1e293b;
+    color: #e2e8f0;
+    box-shadow:
+      inset 0 0 10px #334155,
+      0 0 0 0 transparent;
+    transition: box-shadow 0.35s ease, transform 0.3s ease;
+    outline-offset: 3px;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .input-section select:focus {
+    box-shadow:
+      inset 0 0 12px #60a5fa,
+      0 0 10px 4px #60a5fa;
+    outline: none;
+    background-color: #1e40af;
+    transform: scale(1.05);
+  }
+  
+  /* Buttons */
+  .input-section button {
+    padding: 16px 36px;
+    font-weight: 700;
+    border-radius: 18px;
+    cursor: pointer;
+    border: none;
+    background: linear-gradient(135deg, #2563eb, #60a5fa);
+    color: white;
+    min-width: 160px;
+    font-size: 1.15rem;
+    transition:
+      background 0.35s ease,
+      box-shadow 0.35s ease,
+      transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    box-shadow:
+      0 6px 18px rgba(96, 165, 250, 0.7),
+      0 0 10px rgba(96, 165, 250, 0.6);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    filter: drop-shadow(0 0 2px rgba(96,165,250,0.9));
+  }
+  
+  /* PDF Button */
+  .input-section .pdf-btn {
+    background: linear-gradient(135deg, #16a34a, #4ade80);
+    box-shadow:
+      0 6px 18px rgba(74, 222, 128, 0.8),
+      0 0 12px rgba(74, 222, 128, 0.8);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+    filter: drop-shadow(0 0 2.5px rgba(74, 222, 128, 1));
+    transition:
+      background 0.35s ease,
+      box-shadow 0.35s ease,
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 180px;
+    font-size: 1.15rem;
+  }
+  
+  .input-section .pdf-btn:hover {
+    background: linear-gradient(135deg, #15803d, #22c55e);
+    box-shadow:
+      0 14px 32px rgba(34, 197, 94, 1),
+      0 0 28px rgba(34, 197, 94, 1);
+    transform: translateY(-5px) scale(1.1);
+  }
+  
+  .input-section button:hover:not(.pdf-btn) {
+    background: linear-gradient(135deg, #1e40af, #3b82f6);
+    box-shadow:
+      0 12px 28px rgba(59, 130, 246, 1),
+      0 0 24px rgba(59, 130, 246, 0.8);
+    transform: translateY(-4px) scale(1.07);
+  }
+  
+  .input-section button:active:not(.pdf-btn) {
+    transform: translateY(0) scale(0.98);
+    box-shadow:
+      0 6px 15px rgba(59, 130, 246, 0.7),
+      0 0 10px rgba(59, 130, 246, 0.5);
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .input-section {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .input-section input,
+    .input-section select,
+    .input-section button {
+      width: 100%;
+      max-width: 360px;
+    }
+  }
+  
+  /* PDF export mode - force black text */
+.pdf-export * {
+  color: #000000 !important;
+}
+
+/* Edit Button Style */
+.edit-btn {
+  background-color: #22c55e; /* green like Clear All */
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  padding: 4px 10px;
+  margin-left: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: transform 0.2s ease;
+}
+
+.edit-btn:hover {
+  transform: scale(1.05);
+  background-color: #16a34a; /* slightly darker green on hover */
+}
+
+/* Transaction List Items */
+.transaction-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.transaction-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Pushes Edit button to the right */
+  padding: 8px 12px;
+  border-bottom: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+/* Edit button styling */
+.edit-btn {
+  background-color: #3b82f6; /* blue */
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 0.85rem;
+}
+
+.edit-btn:hover {
+  background-color: #2563eb;
+}
