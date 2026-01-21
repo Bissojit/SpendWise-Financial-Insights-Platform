@@ -1,8 +1,6 @@
 import { useMemo, useState } from "react";
 
-/* =======================
-   Types
-======================= */
+/* types */
 
 interface Transaction {
   id: string;
@@ -16,9 +14,7 @@ interface CategoriseSpendingProps {
   transactions: Transaction[];
 }
 
-/* =======================
-   Category Rules
-======================= */
+/* Category Rules */
 
 const CATEGORY_KEYWORDS: Record<string, string[]> = {
   Transport: ["bus", "train", "uber", "taxi", "metro", "fuel"],
@@ -28,9 +24,7 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = {
   Utilities: ["electricity", "water", "internet", "gas", "rent"],
 };
 
-/* =======================
-   Helpers
-======================= */
+/*Helpers*/
 
 const getCategory = (description: string): string => {
   const lower = description.toLowerCase();
@@ -44,9 +38,7 @@ const getCategory = (description: string): string => {
   return "Others";
 };
 
-/* =======================
-   Component
-======================= */
+/*Component*/
 
 export default function CategoriseSpending({
   transactions,
