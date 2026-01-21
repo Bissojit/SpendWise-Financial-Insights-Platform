@@ -7,7 +7,7 @@ const Header: React.FC<{ onImportClick: () => void; onExportClick: () => void; }
         <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden><path d="M3 12a9 9 0 1 0 18 0A9 9 0 0 0 3 12z" /></svg>
         <div>
           <h1>MoneyMap</h1>
-          <p className="muted">Personal finance tracker — local-first</p>
+          <p className="muted">SpendWise - Financial Insights Platform — local-first</p>
         </div>
       </div>
       <nav>

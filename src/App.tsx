@@ -1,21 +1,27 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
   Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Legend,
 } from "recharts";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+
+import CategoriseSpending from "./components/CategoriseSpending";
 import "./styles/global.css";
+
+/* =======================
+   Types
+======================= */
 
 interface Transaction {
   id: string;
@@ -25,16 +31,31 @@ interface Transaction {
   currency: string;
 }
 
+interface PieDataItem {
+  name: string;
+  value: number;
+}
+
+/* =======================
+   Constants
+======================= */
+
 const COLORS = [
   "#8A2BE2", "#A52A2A", "#FFD700", "#FF7F50", "#20B2AA",
   "#FF69B4", "#6495ED", "#DC143C", "#4CAF50", "#F44336",
   "#FF8C00", "#2E8B57", "#BA55D3", "#00CED1", "#CD5C5C",
-  "#1E90FF", "#ADFF2F", "#B8860B", "#FF1493", "#708090"
+  "#1E90FF", "#ADFF2F", "#B8860B", "#FF1493", "#708090",
 ];
 
 const CURRENCIES = ["US($)", "AU($)", "EURO(€)", "GBP(£)", "INR(₹)", "JPY(¥)"];
 
+/* =======================
+   Component
+======================= */
+
 export default function App() {
+  /* ---------- State ---------- */
+
   const [transactions, setTransactions] = useState<Transaction[]>(() => {
     const saved = localStorage.getItem("transactions");
     return saved ? JSON.parse(saved) : [];
@@ -45,16 +66,23 @@ export default function App() {
   const [type, setType] = useState<"income" | "expense">("income");
   const [currency, setCurrency] = useState("US($)");
   const [search, setSearch] = useState("");
+
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editDescription, setEditDescription] = useState("");
   const [editAmount, setEditAmount] = useState("");
-  const [isExportingPDF, setIsExportingPDF] = useState(false);
+
+  // Kept intentionally to preserve original logic
+  const [isExportingPDF] = useState(false);
 
   const pdfRef = useRef<HTMLDivElement>(null);
+
+  /* ---------- Effects ---------- */
 
   useEffect(() => {
     localStorage.setItem("transactions", JSON.stringify(transactions));
   }, [transactions]);
+
+  /* ---------- Derived Values ---------- */
 
   const totalIncome = transactions
     .filter((t) => t.type === "income")
@@ -65,6 +93,37 @@ export default function App() {
     .reduce((sum, t) => sum + t.amount, 0);
 
   const balance = totalIncome - totalExpense;
+
+  const filteredTransactions = transactions.filter((t) =>
+    t.description.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const pieData: PieDataItem[] = filteredTransactions.reduce<PieDataItem[]>(
+    (acc, transaction) => {
+      const existing = acc.find(
+        (item) => item.name === transaction.description
+      );
+
+      if (existing) {
+        existing.value += transaction.amount;
+      } else {
+        acc.push({
+          name: transaction.description,
+          value: transaction.amount,
+        });
+      }
+
+      return acc;
+    },
+    []
+  );
+
+  const barData = [
+    { name: "Income", amount: totalIncome },
+    { name: "Expense", amount: totalExpense },
+  ];
+
+  /* ---------- Handlers ---------- */
 
   const handleAddTransaction = () => {
     if (!description || !amount) return;
@@ -83,84 +142,80 @@ export default function App() {
   };
 
   const handleClearAll = () => {
-    if (window.confirm("Are you sure you want to clear all transactions?")) {
+    const confirmed = window.confirm(
+      "Are you sure you want to clear all transactions?"
+    );
+
+    if (confirmed) {
       setTransactions([]);
       localStorage.removeItem("transactions");
     }
   };
 
-  const startEditing = (t: Transaction) => {
-    setEditingId(t.id);
-    setEditDescription(t.description);
-    setEditAmount(t.amount.toString());
+  const startEditing = (transaction: Transaction) => {
+    setEditingId(transaction.id);
+    setEditDescription(transaction.description);
+    setEditAmount(transaction.amount.toString());
   };
 
   const saveEdit = (id: string) => {
     setTransactions((prev) =>
-      prev.map((t) =>
-        t.id === id
-          ? { ...t, description: editDescription, amount: parseFloat(editAmount) }
-          : t
+      prev.map((transaction) =>
+        transaction.id === id
+          ? {
+              ...transaction,
+              description: editDescription,
+              amount: parseFloat(editAmount),
+            }
+          : transaction
       )
     );
+
     setEditingId(null);
     setEditDescription("");
     setEditAmount("");
   };
 
   const handleDownloadPDF = () => {
-    const element = pdfRef.current as HTMLElement | null;
+    const element = pdfRef.current;
     if (!element) return;
-  
-    // Hide form section
-    const formSection = element.querySelector(".form-section") as HTMLElement | null;
+
+    const formSection = element.querySelector(
+      ".form-section"
+    ) as HTMLElement | null;
+
+    const editButtons = element.querySelectorAll(
+      ".edit-btn"
+    ) as NodeListOf<HTMLElement>;
+
     if (formSection) formSection.style.display = "none";
-  
-    // Hide all edit buttons
-    const editButtons = element.querySelectorAll(".edit-btn") as NodeListOf<HTMLElement>;
     editButtons.forEach((btn) => (btn.style.display = "none"));
-  
+
     element.classList.add("pdf-export");
-  
+
     html2canvas(element, {
       scale: 2,
-      backgroundColor: "#ffffff"
+      backgroundColor: "#ffffff",
     }).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
+      const imageData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4");
+
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-  
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+
+      pdf.addImage(imageData, "PNG", 0, 0, pdfWidth, pdfHeight);
       pdf.save("finance-tracker.pdf");
-  
-      // Restore everything after PDF
+
       if (formSection) formSection.style.display = "";
       editButtons.forEach((btn) => (btn.style.display = ""));
       element.classList.remove("pdf-export");
     });
   };
-  
-  const filteredTransactions = transactions.filter((t) =>
-    t.description.toLowerCase().includes(search.toLowerCase())
-  );
 
-  const pieData = filteredTransactions.reduce((acc: any[], t) => {
-    const found = acc.find((item) => item.name === t.description);
-    if (found) {
-      found.value += t.amount;
-    } else {
-      acc.push({ name: t.description, value: t.amount });
-    }
-    return acc;
-  }, []);
+  const formatCurrency = (value: number, cur: string) =>
+    `${cur}${value.toFixed(2)}`;
 
-  const barData = [
-    { name: "Income", amount: totalIncome },
-    { name: "Expense", amount: totalExpense },
-  ];
-
-  const formatCurrency = (amount: number, cur: string) => `${cur}${amount.toFixed(2)}`;
+  /* ---------- Render ---------- */
 
   return (
     <div className="app-container">
@@ -170,7 +225,7 @@ export default function App() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        Personal Finance Tracker
+        SpendWise - Financial Insights Platform
       </motion.h1>
 
       {/* Top Controls */}
@@ -181,6 +236,7 @@ export default function App() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+
         <motion.button
           className="pdf-btn"
           whileHover={{ scale: 1.05 }}
@@ -188,6 +244,7 @@ export default function App() {
         >
           Download as PDF
         </motion.button>
+
         <motion.button
           className="clear-btn"
           whileHover={{ scale: 1.05 }}
@@ -213,28 +270,36 @@ export default function App() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
+
           <input
             type="number"
             placeholder="Amount"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
-          <select value={currency} onChange={(e) => setCurrency(e.target.value)}>
+
+          <select
+            value={currency}
+            onChange={(e) => setCurrency(e.target.value)}
+          >
             {CURRENCIES.map((cur) => (
-              <option key={cur} value={cur}>{cur}</option>
+              <option key={cur} value={cur}>
+                {cur}
+              </option>
             ))}
           </select>
+
           <select
             value={type}
-            onChange={(e) => setType(e.target.value as "income" | "expense")}
+            onChange={(e) =>
+              setType(e.target.value as "income" | "expense")
+            }
           >
             <option value="income">Income</option>
             <option value="expense">Expense</option>
           </select>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            onClick={handleAddTransaction}
-          >
+
+          <motion.button whileHover={{ scale: 1.05 }} onClick={handleAddTransaction}>
             Add
           </motion.button>
         </div>
@@ -245,16 +310,12 @@ export default function App() {
             <h2>Category Breakdown</h2>
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  dataKey="value"
-                  label
-                >
+                <Pie data={pieData} outerRadius={80} dataKey="value" label>
                   {pieData.map((_, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
                   ))}
                 </Pie>
                 <Tooltip />
@@ -285,14 +346,19 @@ export default function App() {
           </div>
         </div>
 
+        {/* ✅ Categorised Spending */}
+        <CategoriseSpending transactions={transactions} />
+
         {/* Transaction List */}
         <div className="transaction-list">
           <h2>Transactions</h2>
+
           {filteredTransactions.length === 0 && <p>No transactions yet.</p>}
+
           <ul>
-            {filteredTransactions.map((t) => (
-              <li key={t.id} className={t.type}>
-                {editingId === t.id ? (
+            {filteredTransactions.map((transaction) => (
+              <li key={transaction.id} className={transaction.type}>
+                {editingId === transaction.id ? (
                   <>
                     <input
                       type="text"
@@ -304,18 +370,36 @@ export default function App() {
                       value={editAmount}
                       onChange={(e) => setEditAmount(e.target.value)}
                     />
+
                     {!isExportingPDF && (
                       <>
-                        <button className="edit-btn" onClick={() => saveEdit(t.id)}>Save</button>
-                        <button className="edit-btn" onClick={() => setEditingId(null)}>Cancel</button>
+                        <button
+                          className="edit-btn"
+                          onClick={() => saveEdit(transaction.id)}
+                        >
+                          Save
+                        </button>
+                        <button
+                          className="edit-btn"
+                          onClick={() => setEditingId(null)}
+                        >
+                          Cancel
+                        </button>
                       </>
                     )}
                   </>
                 ) : (
                   <>
-                    {t.description} - {formatCurrency(t.amount, t.currency)}
+                    {transaction.description} -{" "}
+                    {formatCurrency(transaction.amount, transaction.currency)}
+
                     {!isExportingPDF && (
-                      <button className="edit-btn" onClick={() => startEditing(t)}>Edit</button>
+                      <button
+                        className="edit-btn"
+                        onClick={() => startEditing(transaction)}
+                      >
+                        Edit
+                      </button>
                     )}
                   </>
                 )}

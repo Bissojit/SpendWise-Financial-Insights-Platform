@@ -11,7 +11,7 @@
         rgba(15, 23, 42, 0.75),
         rgba(15, 23, 42, 0.75)
       ),
-      url('https://d31bgfoj87qaaj.cloudfront.net/blog/wp-content/uploads/2017/10/Blog-11-reasonsfeature-min.jpg')
+      url('https://image.slidesdocs.com/responsive-images/background/a-business-notebook-and-some-graphs-and-a-calculator-on-top-powerpoint-background_207c485ce6__960_540.jpg')
       no-repeat center center fixed;
     background-size: cover;
     color: #e2e8f0;
@@ -215,14 +215,14 @@
     }
   }
   
-  /* PDF export mode - force black text */
+  /* PDF export mode (force black text) */
 .pdf-export * {
   color: #000000 !important;
 }
 
 /* Edit Button Style */
 .edit-btn {
-  background-color: #22c55e; /* green like Clear All */
+  background-color: #22c55e; 
   color: #ffffff;
   border: none;
   border-radius: 5px;
@@ -235,7 +235,7 @@
 
 .edit-btn:hover {
   transform: scale(1.05);
-  background-color: #16a34a; /* slightly darker green on hover */
+  background-color: #16a34a; 
 }
 
 /* Transaction List Items */
@@ -248,7 +248,7 @@
 .transaction-list li {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Pushes Edit button to the right */
+  justify-content: space-between;
   padding: 8px 12px;
   border-bottom: 1px solid #ddd;
   font-size: 1rem;
@@ -256,7 +256,7 @@
 
 /* Edit button styling */
 .edit-btn {
-  background-color: #3b82f6; /* blue */
+  background-color: #3b82f6;
   color: white;
   border: none;
   padding: 4px 8px;
@@ -268,4 +268,65 @@
 
 .edit-btn:hover {
   background-color: #2563eb;
+}
+
+.category-box {
+  margin-top: 2rem;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.category-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.category-buttons button {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 6px;
+  background: #6366f1;
+  color: white;
+  cursor: pointer;
+}
+
+.category-buttons button:hover {
+  opacity: 0.9;
+}
+
+.category-details ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.category-details li {
+  margin: 0.3rem 0;
+}
+
+/*Edit Mode*/
+
+.transaction-list input {
+  padding: 0.4rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 0.90rem;
+  margin-right: 0.4rem;
+}
+
+.edit-btn {
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.90rem;
+  cursor: pointer;
+  margin-left: 0.3rem;
+  transition: background 0.2s ease;
+}
+
+.edit-btn:hover {
+  background: #4f46e5;
 }
