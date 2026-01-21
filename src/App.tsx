@@ -19,9 +19,7 @@ import jsPDF from "jspdf";
 import CategoriseSpending from "./components/CategoriseSpending";
 import "./styles/global.css";
 
-/* =======================
-   Types
-======================= */
+/* Types */
 
 interface Transaction {
   id: string;
@@ -36,9 +34,7 @@ interface PieDataItem {
   value: number;
 }
 
-/* =======================
-   Constants
-======================= */
+/* Constants */
 
 const COLORS = [
   "#8A2BE2", "#A52A2A", "#FFD700", "#FF7F50", "#20B2AA",
@@ -49,12 +45,10 @@ const COLORS = [
 
 const CURRENCIES = ["US($)", "AU($)", "EURO(€)", "GBP(£)", "INR(₹)", "JPY(¥)"];
 
-/* =======================
-   Component
-======================= */
+/* Component */
 
 export default function App() {
-  /* ---------- State ---------- */
+  /* State */
 
   const [transactions, setTransactions] = useState<Transaction[]>(() => {
     const saved = localStorage.getItem("transactions");
@@ -76,13 +70,13 @@ export default function App() {
 
   const pdfRef = useRef<HTMLDivElement>(null);
 
-  /* ---------- Effects ---------- */
+  /* Effects */
 
   useEffect(() => {
     localStorage.setItem("transactions", JSON.stringify(transactions));
   }, [transactions]);
 
-  /* ---------- Derived Values ---------- */
+  /* Derived Values */
 
   const totalIncome = transactions
     .filter((t) => t.type === "income")
@@ -123,7 +117,7 @@ export default function App() {
     { name: "Expense", amount: totalExpense },
   ];
 
-  /* ---------- Handlers ---------- */
+  /* Handlers */
 
   const handleAddTransaction = () => {
     if (!description || !amount) return;
@@ -215,7 +209,7 @@ export default function App() {
   const formatCurrency = (value: number, cur: string) =>
     `${cur}${value.toFixed(2)}`;
 
-  /* ---------- Render ---------- */
+  /* Render */
 
   return (
     <div className="app-container">
@@ -346,7 +340,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* ✅ Categorised Spending */}
+        {/* Categorised Spending */}
         <CategoriseSpending transactions={transactions} />
 
         {/* Transaction List */}
