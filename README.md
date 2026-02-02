@@ -1,6 +1,6 @@
 # SpendWise - Financial Insights Platform
 
-A personal finance management web app that helps users track income, expenses, and spending habits with visual insights. Built to demonstrate **data handling, state management, and clean UI design**.
+A finance management web app that helps users track income, expenses, and spending habits with visual insights. Built to demonstrate **data handling, state management, and clean UI design**.
 
 ## Features
 
